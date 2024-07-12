@@ -1,0 +1,7 @@
+Clone the following repositories:
+
+(1) Sample payment-gateway project
+https://github.com/vppmatt/paymentgateway-standalone-17
+
+(2) curl generator
+https://github.com/vppmatt/curl-generator.git
