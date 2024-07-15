@@ -21,8 +21,13 @@ public class ServiceLoggingAspect {
     public void logServiceMethods() {}
 
     private String getArgsAsString(Object[] args) {
-        String[] stringArgs = Arrays.copyOf(args, args.length, String[].class);
-        return String.join(",", stringArgs);
+        try {
+            String[] stringArgs = Arrays.copyOf(args, args.length, String[].class);
+            return String.join(",", stringArgs);
+        }
+        catch (Exception e) {
+            return "[unknown]";
+        }
     }
 
 
