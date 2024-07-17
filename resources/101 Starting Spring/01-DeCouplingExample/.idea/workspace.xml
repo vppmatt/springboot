@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0ba5d9e7-d303-463d-b390-f7f499eafbbb" name="Changes" comment="" />
+    <list default="true" id="0ba5d9e7-d303-463d-b390-f7f499eafbbb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="ProjectId" id="2j0kfmlqJEQBUYLinTT2sjh6pHQ" />
   <component name="ProjectViewState">
@@ -16,7 +21,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/gitrepositories/courses/springboot/end of section workspaces/01-DeCouplingExample",
+    "last_opened_file_path": "D:/gitrepositories/courses/springboot/resources/101 Starting Spring/02-spring-container-demo",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -43,6 +48,7 @@
       <option name="presentableId" value="Default" />
       <updated>1720531488953</updated>
       <workItem from="1720531489790" duration="155000" />
+      <workItem from="1721142286532" duration="873000" />
     </task>
     <servers />
   </component>
