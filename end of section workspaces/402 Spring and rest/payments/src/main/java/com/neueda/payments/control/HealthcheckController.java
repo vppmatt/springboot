@@ -6,11 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-
-/*
-THIS IS THE RESOURCES PROJECT _ SET UP DATA!
- */
-
 @RestController
 @CrossOrigin
 public class HealthcheckController {
