@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rest bearer authenticaiton test client</title>
+
+    <style>
+        div {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+
+    <script>
+            const sendHttpRequest = (url, method, data, includeJWT, outputDivName) => {
+            const outputDiv = document.getElementById(outputDivName);
+
+            outputDiv.innerHTML = "sending...";
+
+            const headers = new Headers();
+            headers.append("Content-Type","application/json" );
+
+            if (includeJWT) {
+                const jwtDiv = document.getElementById("jwt");
+                const jwtHTML = jwtDiv.innerHTML.replace("<pre>","").replace("</pre>","");
+                const jwt = JSON.parse(jwtHTML).jwt;
+                headers.append("Authorization", `Bearer ${jwt}`);
+            }
+
+            const response = fetch(url, {method: method, body: data != null ? JSON.stringify(data) : null, headers : headers})
+            response.then (result => {
+                if (result.status === 200) {
+                    console.log(result);
+                    result.json().then( body => {
+                        outputDiv.innerHTML =  "<pre>" + JSON.stringify(body) + "</pre>";;
+                    })
+                }
+                else {
+                    outputDiv.innerHTML =  `<p style='color:#f00;'>STATUS : ${result.status} (${result.statusText})</p>`;
+                }
+            })
+
+        }
+
+        const test1 = () => {
+            sendHttpRequest("http://localhost:8080/api/country", "GET", null , false,  "test1");
+        }
+
+        const test2 = () => {
+            sendHttpRequest("http://localhost:8080/api/user", "POST", {username:"test", password: "test", role : "USER"} , false,  "test2");
+        }
+
+        const test3 = () => {
+            sendHttpRequest("http://localhost:8080/api/auth", "POST", {username: "user1", password: "password"}, false, "jwt");
+        }
+
+        const test4 = () => {
+            sendHttpRequest("http://localhost:8080/api/user", "GET", null, true, "test4");
+        }
+
+        const test5 = () => {
+            sendHttpRequest("http://localhost:8080/api/user", "POST", {name : "Matt", password : "password", role : "USER"}, true, "test5");
+        }
+
+        const test6 = () => {
+            sendHttpRequest("http://localhost:8080/api/auth", "POST", {username: "user2", password: "password"}, false, "jwt");
+        }
+
+        const test7 = () => {
+            sendHttpRequest("http://localhost:8080/api/user", "POST", {name : "Matt", password : "password", role : "USER"}, true, "test7");
+        }
+        const test8 = () => {
+            sendHttpRequest("http://localhost:8080/api/user", "POST", {name : "Matt", password : "password", role : "USER"}, true, "test8");
+        }
+        const test9 = () => {
+            const jwtDiv = document.getElementById("jwt");
+            const jwtHTML = jwtDiv.innerHTML.replace("<pre>","").replace("</pre>","");
+            const refreshJwt = JSON.parse(jwtHTML).refreshJwt;
+            sendHttpRequest("http://localhost:8080/api/auth/refresh", "POST", {username: "user1", password: refreshJwt}, false, "jwt");
+        }
+
+        const decodeJwt = () => {
+            const jwtDiv = document.getElementById("jwt");
+            const jwtHTML = jwtDiv.innerHTML.replace("<pre>","").replace("</pre>","");
+            const jwt = JSON.parse(jwtHTML).jwt;
+            const refreshJwt = JSON.parse(jwtHTML).refreshJwt;
+
+
+            const output1 = document.getElementById("jwt1");
+            const jwtSplits = jwt.split(".");
+            const iat1 = JSON.parse(atob(jwtSplits[1])).iat;
+            const exp1 = JSON.parse(atob(jwtSplits[1])).exp;
+            output1.innerHTML = `<p>${atob(jwtSplits[0])}</p><p>${atob(jwtSplits[1])}</p><p>Issued at : ${new Date(iat1 * 1000)}</p><p>Expires : ${new Date(exp1 * 1000)}</p>`;
+            const output2 = document.getElementById("jwt2");
+            const refreshJwtSplits = refreshJwt.split(".");
+            const iat2 = JSON.parse(atob(refreshJwtSplits[1])).iat;
+            const exp2 = JSON.parse(atob(refreshJwtSplits[1])).exp;
+            output2.innerHTML = `<p>${atob(refreshJwtSplits[0])}</p><p>${atob(refreshJwtSplits[1])}</p><p>Issued at : ${new Date(iat2 * 1000)}</p><p>Expires : ${new Date(exp2 * 1000)}</p>`;
+        }
+    </script>
+
+
+</head>
+<body>
+
+<h2>Test 1 - un-authenticated GET should fail with 403</h2>
+<button onClick="test1()">Go</button>
+<div id="test1"></div>
+
+<h2>Test 2 - un-authenticated POST should fail with 403</h2>
+<button onClick="test2()">Go</button>
+<div id="test2"></div>
+
+<h2>Test 3 - authenticate and get a JWT</h2>
+<button onClick="test3()">Go</button>
+<div id="jwt"></div>
+
+<h2>Test 3a - decode JWTs</h2>
+<button onClick="decodeJwt()">Go</button>
+<div id="jwt1"></div>
+<div id="jwt2"></div>
+
+<h3>Test 4 - Authenticated get with role USER should work</h3>
+<button onClick="test4()">Go</button>
+<div id="test4"></div>
+
+<h3>Test 5 - Authenticated post with role USER should fail with 403</h3>
+<button onClick="test5()">Go</button>
+<div id="test5"></div>
+
+<h2>Test 6 - authenticate as ADMIN and get a JWT</h2>
+<button onClick="test6()">Go</button>
+<p>results under test 3 above</p>
+
+<h3>Test 7 - Authenticated post with role ADMIN should work</h3>
+<button onClick="test7()">Go</button>
+<div id="test7"></div>
+
+<h3>Test 8 - expired token request should fail with 403</h3>
+<b>Wait until token has expired!</b>
+<button onClick="test8()">Go</button>
+<div id="test8"></div>
+
+<h3>Test 9 - refresh token request should generate new token</h3>
+<button onClick="test9()">Go</button>
+<p>results under test 3 above</p>
+
+<h3>Test 10 - refresh token request should fail if refresh token has expired</h3>
+
+</body>
+</html>
