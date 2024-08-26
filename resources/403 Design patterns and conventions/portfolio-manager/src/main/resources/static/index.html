@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio sample client</title>
+</head>
+<body>
+
+<h2>Portfolio</h2>
+<div id="portfolio" style="height: 150px; scroll-behavior: auto; border: 1px solid #000;"></div>
+
+<button onclick="refresh();">refresh</button>
+
+<h2>Actions</h2>
+<div id="actions" style="height: 300px; overflow: scroll; border: 1px solid #000;"></div>
+
+<button onclick="start();">start</button>
+
+<script>
+
+    const refresh = () => {
+        const portfolioDiv = document.getElementById("portfolio");
+        fetch("http://localhost:8080/portfolio",{method: "GET", headers: {'Accept': 'application/json'}})
+            .then (result => {
+                result.json().then(body =>
+                {
+                    console.log(body);
+                    portfolioDiv.innerText = JSON.stringify(body, null, 2);
+                });
+            });
+    }
+
+    const start = () => {
+        const shares=["abc","def","ghi","jkl","mno"];
+        const actionsDiv = document.getElementById("actions");
+        for (let counter = 1; counter < 10; counter++) {
+            for (let share of shares) {
+
+                fetch("http://localhost:8080/portfolio",{method: "POST", headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify({type : "BUY", share: share, volume : 1000})})
+                    .then (result => {
+                        if (result.status === 200) {
+                            actionsDiv.innerHTML = actionsDiv.innerHTML + `<p>bought 1000 shares in ${share}</p>`
+                        }
+                    })
+                fetch("http://localhost:8080/portfolio",{method: "POST", headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify({type : "SELL", share: share, volume : 1000})})
+                    .then (result => {
+                        if (result.status === 200) {
+                            actionsDiv.innerHTML = actionsDiv.innerHTML + `<p>sold 1000 shares in ${share}</p>`
+                        }
+                    })
+            }
+        }
+    }
+</script>
+</body>
+</html>
